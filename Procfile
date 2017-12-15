@@ -1,0 +1,1 @@
+start: node react-backend/bin/www
