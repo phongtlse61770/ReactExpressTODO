@@ -3,15 +3,18 @@ import logo from './logo.svg';
 import './App.css';
 
 class App extends Component {
-    state = {users: []};
+    state = {todos: []};
 
     componentDidMount() {
-      fetch("users/")
+      fetch("todos/")
           .then(res => res.json())
-          .then(users => this.setState({users}))
+          .then(data => this.setState({
+              todos:data.todos
+          }))
     }
 
     render() {
+        console.log(this.state.todos);
         return (
             <div className="App">
                 <header className="App-header">
@@ -21,9 +24,9 @@ class App extends Component {
                 <p className="App-intro">
                     To get started, edit <code>src/App.js</code> and save to reload.
                 </p>
-                <h1>Users</h1>
-                {this.state.users.map(user =>
-                    <div key={user.id}>{user.username}</div>
+                <h1>Todos</h1>
+                {this.state.todos.map(todo =>
+                    <div key={todo.Id}>{todo.Title}</div>
                 )}
             </div>
         );
