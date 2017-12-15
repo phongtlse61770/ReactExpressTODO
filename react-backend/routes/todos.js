@@ -10,7 +10,7 @@ router.get('/', function (req, res, next) {
         .then(result => {
             res.status(200);
             res.json({
-                todos: result.recordsets
+                todos: result.recordset
             });
         })
         .catch(next)
@@ -31,7 +31,7 @@ router.get("/:id", [check("id").exists(), check("id", "id must be integer").isIn
         .then(result => {
             // res.status(200);
             res.json({
-                todos: result.recordsets
+                todos: result.recordset
             });
         })
         .catch(next)

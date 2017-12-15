@@ -9,7 +9,7 @@ router.get('/', function (req, res, next) {
         .then(result => {
             res.status(200);
             res.json({
-                users: result.recordsets
+                users: result.recordset
             });
         })
         .catch(next)
