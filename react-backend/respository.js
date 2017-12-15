@@ -24,18 +24,18 @@ function query(query, inputs) {
         else{
             let request = new mssql.Request(pool);
             if (inputs) {
-                for (const input of inputs) {
-                    request.input(input.name, input.value);
+                for (const property in inputs) {
+                    if (inputs.hasOwnProperty(property)) {
+                        request.input(property,inputs[property]);
+                    }
                 }
             }
             request.query(query, function (err, result) {
                 if (err) {
-                    console.error("Error while querying database :- " + err);
                     reject(err);
                     pool.close();
                 }
                 else {
-                    console.log(result);
                     resolve(result);
                     pool.close();
                 }
@@ -43,10 +43,6 @@ function query(query, inputs) {
         }
     });
     return promise;
-}
-
-function printError(err) {
-    console.error(err);
 }
 
 
