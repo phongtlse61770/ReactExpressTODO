@@ -1,1 +1,1 @@
-start: node react-backend/bin/www
+web: node react-backend/bin/www
