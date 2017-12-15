@@ -16,13 +16,16 @@ router.get('/', function (req, res, next) {
         .catch(next)
 });
 
-router.get("/:id", [check("id").exists(),check("id","id must be integer").isInt()], function (req, res, next) {
+router.get("/:id", [check("id").exists(), check("id", "id must be integer").isInt()], function (req, res, next) {
     //validate
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         res.status(400);
-        res.json({ errors: errors.mapped()})
+        res.json({errors: errors.mapped()});
+        res.end();
+        return;
     }
+
     //query
     sql.query("select * from todo where id = @id", req.params)
         .then(result => {
