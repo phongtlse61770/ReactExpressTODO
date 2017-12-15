@@ -1,4 +1,4 @@
-const sql = require('mssql');
+const mssql = require('mssql');
 
 const config = {
     user: "todoapp4",
@@ -7,21 +7,46 @@ const config = {
     database: "todoapp4"
 };
 
+
 /**
  * Query db
  * @param query|String: a query string
  * @param inputs| array<name,value>: params for query string
  */
-async function query(query, inputs) {
-    sql.connect(config).then(pool => {
-        let request = pool.request();
-        if (inputs) {
-            for (let input of inputs) {
-                request.input(input.name, input.value);
-            }
-        }
-        return request.query(query);
+function query(query, inputs) {
+    let resolve, reject;
+    const promise = new Promise((res, rej) => {
+        resolve = res;
+        reject = rej;
     });
+    const pool = new mssql.ConnectionPool(config,err => {
+        if(err) reject(err);
+        else{
+            let request = new mssql.Request(pool);
+            if (inputs) {
+                for (const input of inputs) {
+                    request.input(input.name, input.value);
+                }
+            }
+            request.query(query, function (err, result) {
+                if (err) {
+                    console.error("Error while querying database :- " + err);
+                    reject(err);
+                    pool.close();
+                }
+                else {
+                    console.log(result);
+                    resolve(result);
+                    pool.close();
+                }
+            })
+        }
+    });
+    return promise;
+}
+
+function printError(err) {
+    console.error(err);
 }
 
 
