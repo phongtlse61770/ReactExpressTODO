@@ -2,6 +2,7 @@ cd client
 call npm run build
 cd ..
 xcopy /s/e/y  "client/build" "react-backend/public/app"
+del react-backend\public\app\service-worker.js
 cd react-backend
 git add .
 git commit -am deploy
