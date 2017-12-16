@@ -1,5 +1,5 @@
 const express = require('express');
-const {GetUser} = require("../services/AccountService");
+const {GetUser} = require("../services/AccountServices");
 
 const router = express.Router();
 
@@ -16,7 +16,9 @@ router.post("/", function (req, res, next) {
     GetUser(username, password)
         .then(recordSet => {
             if (recordSet.length == 1) {
-                res.json({user: recordSet[0]});
+                res.json({
+                    user: recordSet[0]
+                });
             }
         })
         .catch(next);
