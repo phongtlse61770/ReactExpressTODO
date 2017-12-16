@@ -45,9 +45,24 @@ function query(query, inputs) {
     return promise;
 }
 
+function select(table,projections,where,inputs){
+    let fieldsString = '';
+    if(projections){
+        for(const projection of projections){
+            if(fieldsString) fieldsString += ',';
+            fieldsString += projection;
+        }
+    }else{
+        fieldsString = '*';
+    }
+    let queryString = `select ${fieldsString} from ${table} where ${where}`;
+    return query(queryString,inputs);
+}
+
 
 module.exports = {
-    query
+    query,
+    select
 };
 
 
