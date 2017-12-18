@@ -1,40 +1,41 @@
 const express = require('express');
 const {check, validationResult} = require("express-validator/check");
-const sql = require('../respository');
+const TodoService = require("../services/TodosService");
 
 const router = express.Router();
 
 /* GET todos listing. */
 router.get('/', function (req, res, next) {
-    sql.query("select * from Todo")
-        .then(result => {
-            res.status(200);
-            res.json({
-                todos: result.recordset
-            });
-        })
+    TodoService.getAllTodo()
+        .then(data => res.json({todos: data}))
         .catch(next)
 });
 
-router.get("/:id", [check("id").exists(), check("id", "id must be integer").isInt()], function (req, res, next) {
-    //validate
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        res.status(400);
-        res.json({errors: errors.mapped()});
-        res.end();
-        return;
-    }
+router.get("/:userId",
+    [
+        //validation
+        check("userId").exists(),
+        check("userId", "id must be integer").isInt()
+    ],
+    //processing function
+    function (req, res, next) {
+        //Get error from validate
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            const err = new Error("Bad request");
+            err.status = 400;
+            err.errors = errors;
+            next(err);
+            return;
+        }
 
-    //query
-    sql.query("select * from todo where id = @id", req.params)
-        .then(result => {
-            // res.status(200);
-            res.json({
-                todos: result.recordset
-            });
-        })
-        .catch(next)
-});
+        const {
+            userId
+        } = req.params;
+
+        TodoService.getTodo(userId)
+            .then(data => res.json({todo: data}))
+            .catch(next);
+    });
 
 module.exports = router;

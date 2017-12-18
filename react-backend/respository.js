@@ -19,16 +19,12 @@ function query(query, inputs) {
         resolve = res;
         reject = rej;
     });
-    const pool = new mssql.ConnectionPool(config,err => {
-        if(err) reject(err);
-        else{
+    const pool = new mssql.ConnectionPool(config, err => {
+        if (err) reject(err);
+        else {
             let request = new mssql.Request(pool);
             if (inputs) {
-                for (const property in inputs) {
-                    if (inputs.hasOwnProperty(property)) {
-                        request.input(property,inputs[property]);
-                    }
-                }
+                iterate(inputs, (key, value) => request.input(key, value), true);
             }
             request.query(query, function (err, result) {
                 if (err) {
@@ -45,18 +41,42 @@ function query(query, inputs) {
     return promise;
 }
 
-function select(table,projections,where,inputs){
+function select(table, projections, condition, inputs) {
     let fieldsString = '';
-    if(projections){
-        for(const projection of projections){
-            if(fieldsString) fieldsString += ',';
-            fieldsString += projection;
-        }
-    }else{
-        fieldsString = '*';
+    if (projections) {
+        iterate(projections, (key, value) => {
+            if (fieldsString) fieldsString += ',';
+            fieldsString += value;
+        }, true)
+    } else {
+        throw "Missing projections";
     }
-    let queryString = `select ${fieldsString} from ${table} where ${where}`;
-    return query(queryString,inputs);
+    let queryString = `select ${fieldsString} from ${table}`;
+    if (condition) queryString += ` where ${condition}`;
+    return query(queryString, inputs);
+}
+
+/**
+ * Iterate object or array
+ * @param {Object | Array} target
+ * @param {function(int|string|,value)} callback
+ * @param {boolean} skipEmptyValue
+ */
+function iterate(target, callback, skipEmptyValue) {
+    if (target instanceof Object) {
+        for (const property in target) {
+            if (target.hasOwnProperty(property)) {
+                if (skipEmptyValue && !target[property]) continue;
+                callback(property, target[property])
+            }
+        }
+    } else {
+        let i = 0;
+        for (const element of target) {
+            if (skipEmptyValue && element) continue;
+            callback(i++, element)
+        }
+    }
 }
 
 

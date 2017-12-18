@@ -300,7 +300,7 @@
       <workItem from="1513427660309" duration="886000" />
       <workItem from="1513431320861" duration="7845000" />
       <workItem from="1513475402521" duration="2085000" />
-      <workItem from="1513550280418" duration="6359000" />
+      <workItem from="1513550280418" duration="6372000" />
     </task>
     <task id="LOCAL-00001" summary="Functional /users">
       <created>1513323012291</created>
@@ -379,11 +379,18 @@
       <option name="project" value="LOCAL" />
       <updated>1513556646107</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="Refactor service/router">
+      <created>1513557173132</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1513557173132</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="63187000" />
+    <option name="totallyTimeSpent" value="63200000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
